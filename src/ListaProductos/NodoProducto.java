@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class NodoProducto {
 
-    // Atributos
+    // ATRIBUTOS
     private String nombreProducto;
     private double precio;
     private String categoria;
@@ -13,18 +13,19 @@ public class NodoProducto {
     private ArrayList<String> listaImagenes;
     private NodoProducto siguiente;
 
-    // Constructor
+
+    // CONSTRUCTOR
     public NodoProducto(String nombreProducto, double precio, String categoria, String fechaVencimiento, int cantidad) {
         this.nombreProducto = nombreProducto;
         this.precio = precio;
         this.categoria = categoria;
         this.fechaVencimiento = fechaVencimiento;
         this.cantidad = cantidad;
-        this.listaImagenes = new ArrayList<>();
-        this.siguiente = null;
+        this.listaImagenes = new ArrayList<>(); // inicialización correcta
+        this.siguiente = null; // nodo sin enlace inicial
     }
 
-    // Getters
+    // GETTERS
     public String getNombreProducto() {
         return nombreProducto;
     }
@@ -53,7 +54,7 @@ public class NodoProducto {
         return siguiente;
     }
 
-    // Setters
+    // SETTERS
     public void setPrecio(double precio) {
         this.precio = precio;
     }
@@ -74,12 +75,14 @@ public class NodoProducto {
         this.siguiente = siguiente;
     }
 
-    // Método para agregar imágenes
+    // METODOS
+
+    // Agregar imagen al producto
     public void agregarImagen(String rutaImagen) {
         listaImagenes.add(rutaImagen);
     }
 
-    // toString
+    // TOSTRING
     @Override
     public String toString() {
         return "\nProducto: " + nombreProducto +
@@ -87,7 +90,7 @@ public class NodoProducto {
                 "\nCategoría: " + categoria +
                 "\nFecha Vencimiento: " + fechaVencimiento +
                 "\nCantidad: " + cantidad +
+                "\nCantidad de imágenes: " + listaImagenes.size() +
                 "\nImágenes: " + listaImagenes + "\n";
     }
 }
-

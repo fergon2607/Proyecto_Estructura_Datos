@@ -12,6 +12,66 @@ public class ListaProductos {
         return primero == null;
     }
 
+    // ELIMINAR PRODUCTO
+    public boolean eliminar(String nombre) {
+
+        if (estaVacia()) return false;
+
+        NodoProducto temp = primero;
+        NodoProducto anterior = null;
+
+        while (temp != null && !temp.getNombreProducto().equalsIgnoreCase(nombre)) {
+            anterior = temp;
+            temp = temp.getSiguiente();
+        }
+
+        if (temp == null) return false;
+
+        if (anterior == null) {
+            primero = temp.getSiguiente();
+        } else {
+            anterior.setSiguiente(temp.getSiguiente());
+        }
+
+        return true;
+    }
+
+    // MODIFICAR PRODUCTO
+    public boolean modificar(String nombre) {
+
+        NodoProducto producto = buscar(nombre);
+
+        if (producto == null) return false;
+
+        java.util.Scanner sc = new java.util.Scanner(System.in);
+
+        System.out.print("Nuevo precio: ");
+        producto.setPrecio(sc.nextDouble());
+        sc.nextLine();
+
+        System.out.print("Nueva categoria: ");
+        producto.setCategoria(sc.nextLine());
+
+        System.out.print("Nueva fecha vencimiento: ");
+        producto.setFechaVencimiento(sc.nextLine());
+
+        System.out.print("Nueva cantidad: ");
+        producto.setCantidad(sc.nextInt());
+
+        return true;
+    }
+
+    // AGREGAR IMAGEN
+    public boolean agregarImagen(String nombre, String ruta) {
+
+        NodoProducto producto = buscar(nombre);
+
+        if (producto == null) return false;
+
+        producto.agregarImagen(ruta);
+        return true;
+    }
+
     // Insertar al inicio
     public void insertarInicio(String nombre, double precio, String categoria, String fechaVencimiento, int cantidad) {
         NodoProducto nuevo = new NodoProducto(nombre, precio, categoria, fechaVencimiento, cantidad);
