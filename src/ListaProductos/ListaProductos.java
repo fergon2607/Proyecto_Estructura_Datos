@@ -37,26 +37,14 @@ public class ListaProductos {
     }
 
     // MODIFICAR PRODUCTO
-    public boolean modificar(String nombre) {
-
+    public boolean modificar(String nombre, double precio, String categoria, String fecha, int cantidad) {
         NodoProducto producto = buscar(nombre);
 
         if (producto == null) return false;
-
-        java.util.Scanner sc = new java.util.Scanner(System.in);
-
-        System.out.print("Nuevo precio: ");
-        producto.setPrecio(sc.nextDouble());
-        sc.nextLine();
-
-        System.out.print("Nueva categoria: ");
-        producto.setCategoria(sc.nextLine());
-
-        System.out.print("Nueva fecha vencimiento: ");
-        producto.setFechaVencimiento(sc.nextLine());
-
-        System.out.print("Nueva cantidad: ");
-        producto.setCantidad(sc.nextInt());
+        producto.setPrecio(precio);
+        producto.setCategoria(categoria);
+        producto.setFechaVencimiento(fecha);
+        producto.setCantidad(cantidad);
 
         return true;
     }
@@ -67,7 +55,6 @@ public class ListaProductos {
         NodoProducto producto = buscar(nombre);
 
         if (producto == null) return false;
-
         producto.agregarImagen(ruta);
         return true;
     }

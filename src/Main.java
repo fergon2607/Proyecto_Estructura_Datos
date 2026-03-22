@@ -1,23 +1,24 @@
-import ListaProductos.ListaProductos;
+import tienda.Tienda;
+import clientes.Cliente;
+import arbol.Producto;
+
 import java.util.Scanner;
 
 public class Main {
 
     public static void main(String[] args) {
 
-        ListaProductos lista = new ListaProductos();
         Scanner sc = new Scanner(System.in);
+        Tienda tienda = new Tienda();
+
         int opcion;
 
         do {
-            System.out.println("\n=== MENU ===");
-            System.out.println("1. Insertar producto");
-            System.out.println("2. Mostrar productos");
-            System.out.println("3. Reporte de costos");
-            System.out.println("4. Eliminar producto");
-            System.out.println("5. Modificar producto");
-            System.out.println("6. Agregar imagen");
-            System.out.println("7. Salir");
+            System.out.println("\n=== SISTEMA TIENDA ===");
+            System.out.println("1. Agregar producto al inventario");
+            System.out.println("2. Agregar cliente a la cola");
+            System.out.println("3. Atender cliente");
+            System.out.println("4. Salir");
             System.out.print("Seleccione: ");
 
             opcion = sc.nextInt();
@@ -25,71 +26,107 @@ public class Main {
 
             switch (opcion) {
 
-                case 1:
-                    System.out.print("Nombre: ");
+                // =========================
+                // INSERTAR PRODUCTO
+                // =========================
+                case 1: {
+
+                    System.out.print("Nombre del producto: ");
                     String nombre = sc.nextLine();
 
                     System.out.print("Precio: ");
                     double precio = sc.nextDouble();
                     sc.nextLine();
 
-                    System.out.print("Categoria: ");
-                    String categoria = sc.nextLine();
+                    tienda.getInventario().insertar(nombre, precio);
 
-                    System.out.print("Fecha vencimiento: ");
-                    String fecha = sc.nextLine();
-
-                    System.out.print("Cantidad: ");
-                    int cantidad = sc.nextInt();
-
-                    lista.insertarFinal(nombre, precio, categoria, fecha, cantidad);
+                    System.out.println("Producto agregado al inventario.");
                     break;
+                }
 
-                case 2:
-                    lista.mostrarLista();
-                    break;
+                // =========================
+                // AGREGAR CLIENTE
+                // =========================
+                case 2: {
 
-                case 3:
-                    lista.reporteCostos();
+                    System.out.print("Nombre del cliente: ");
+                    String nombre = sc.nextLine();
+
+                    System.out.print("Prioridad (1-3): ");
+                    int prioridad = sc.nextInt();
+                    sc.nextLine();
+
+                    // Validación de prioridad
+                    if (prioridad < 1 || prioridad > 3) {
+                        System.out.println("Prioridad inválida. Se asigna 1 por defecto.");
+                        prioridad = 1;
+                    }
+
+                    Cliente cliente = new Cliente(nombre, prioridad);
+
+                    // Llenar carrito
+                    String continuar;
+
+                    do {
+                        System.out.print("Nombre del producto a agregar: ");
+                        String nombreProducto = sc.nextLine();
+
+                        Producto p = tienda.getInventario().buscar(nombreProducto);
+
+                        if (p != null) {
+                            cliente.getCarrito().insertarFinal(
+                                    p.getNombre(),
+                                    p.getPrecio(),
+                                    "general",
+                                    "N/A",
+                                    1
+                            );
+                            System.out.println("Producto agregado al carrito.");
+                        } else {
+                            System.out.println("Producto no existe en inventario.");
+                        }
+
+                        System.out.print("¿Agregar otro producto? (s/n): ");
+                        continuar = sc.nextLine();
+
+                    } while (continuar.equalsIgnoreCase("s"));
+
+                    tienda.getColaClientes().insertar(cliente);
+
+                    System.out.println("Cliente agregado a la cola.");
                     break;
+                }
+
+                // =========================
+                // ATENDER CLIENTE
+                // =========================
+                case 3: {
+
+                    Cliente cliente = tienda.getColaClientes().atender();
+
+                    // Validación si no hay clientes
+                    if (cliente == null) {
+                        System.out.println("No hay clientes en la cola.");
+                        break;
+                    }
+
+                    System.out.println("\n======================");
+                    System.out.println("       FACTURA");
+                    System.out.println("======================");
+                    System.out.println("Cliente: " + cliente.getNombre());
+                    System.out.println("Prioridad: " + cliente.getPrioridad());
+                    System.out.println("----------------------");
+
+                    cliente.getCarrito().mostrarLista();
+
+                    System.out.println("----------------------");
+                    cliente.getCarrito().reporteCostos();
+                    System.out.println("======================");
+
+                    break;
+                }
 
                 case 4:
-                    System.out.print("Ingrese nombre del producto a eliminar: ");
-                    String eliminar = sc.nextLine();
-
-                    if (lista.eliminar(eliminar)) {
-                        System.out.println("Producto eliminado.");
-                    } else {
-                        System.out.println("Producto no encontrado.");
-                    }
-                    break;
-
-                case 5:
-                    System.out.print("Ingrese nombre del producto a modificar: ");
-                    String modificar = sc.nextLine();
-
-                    if (lista.modificar(modificar)) {
-                        System.out.println("Producto modificado.");
-                    } else {
-                        System.out.println("Producto no encontrado.");
-                    }
-                    break;
-
-                case 6:
-                    System.out.print("Nombre del producto: ");
-                    String nombreImg = sc.nextLine();
-
-                    System.out.print("Ruta de la imagen: ");
-                    String ruta = sc.nextLine();
-
-                    if (lista.agregarImagen(nombreImg, ruta)) {
-                        System.out.println("Imagen agregada.");
-                    } else {
-                        System.out.println("Producto no encontrado.");
-                    }
-                    break;
-
-                case 7:
                     System.out.println("Saliendo...");
                     break;
 
@@ -97,6 +134,6 @@ public class Main {
                     System.out.println("Opcion invalida.");
             }
 
-        } while (opcion != 7);
+        } while (opcion != 4);
     }
 }
